@@ -1,0 +1,204 @@
+controller - products
+
+URI - /products
+HTTP Method - GET
+Action - index
+Role - to list resources/information
+named route - products_path
+
+URI - /products/new
+HTTP Method - GET
+Action - new
+Role - Instantiate an object and setup a form
+named route - new_product_path
+
+URI - /products
+HTTP Method - POST
+Action - create
+Role - to validate the form, insert the record to the database if the validation pass, else return the errors in the form
+named route - product_path
+
+URI - /products/:id(slug)
+HTTP Method - GET
+Action - show
+Role - to showcase a single resource(data/information) along with its associated resources
+named route - product_path(:id)
+
+URI - /products/:id/edit
+HTTP Method - GET
+Action - edit
+Role - to find the record from the database and display a form
+named route - edit_product_path(:id)
+
+URI - /products/:id
+HTTP Method - PUT
+Action - update
+Role - to validate the form, update the record to the database if the validation pass, else return errors in the form
+named route - product_path(:id)
+
+
+URI - /products/:id
+HTTP Method  - DELETE
+Action - destroy
+Role - to find the record to delete, and call the destroy method
+named route - product_path(:id)
+
+DropDown : 
+1. Attribute name
+2. All the objects
+3. Id in the objects table
+4. Foreign key in the products table
+
+
+Devise:
+
+i. Install Gem
+ii. Installing the Devise Middleware "rails generate devise:install"
+iii. Under Config in devise.rb copy the first step: config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+iv. Under config in routes.rb, ensure you have a root  for example root 'products#index'
+v. Under app in views in layout - application.html.erb file ensure you have notice and alert
+vi. Finally create using rails g devise:views
+vii. rails generate devise user
+viii. rake db:migrate
+
+
+STEP 1: WORKING IN MODEL : Follow these steps - best practice
+Generating Model for Line Item
+rails generate Model CartLineItem user_id:integer product_id:integer quantity:integer
+Creates a model and migration file
+"rake db:migrate" will set it up
+After this create the associations
+
+
+STEP 2: CREATE CONTROLLER
+Generate controller
+rails generate controller CartLineItems
+Define routes go to routes.rb
+resources :cart_line_items : These give the 7 actions by default
+
+STEP 3: In the Product controller show action, we need to add CartLineItem object so that we can add a "Add to Cart" button in the show page of the PRoduct
+
+STEP 1:
+To add a specific column to a table without touching ht model
+rails generate migration add_column_is_admin_to_users is_admin:boolean
+
+STEP 2 : 
+Under db in the mogration file, add default value as false
+rake db:migrate
+
+STEP 3:
+Create an admin user through rails console
+user = User.new
+user.username = "admin"
+user.email = "admin#gmail.com"
+user.password = "secret123"
+user.is_admin = true
+user.save
+
+
+STEP 4:
+Now change the edit credentials depending on whether the user is an admin or not
+Views : In show and index page of products, control the admin rights to links to add, edit and destroy products
+
+STEP 5:
+To prevent url manipulation" go to the appcontrol and define before_action:
+
+
+
+To Create Order Model
+
+rails generate model order order_number:string order_date:date total:float user_id:integer
+rake db:migrate
+rails generate controller orders
+Path in config/routes.rd : resources:orders 
+
+To Create OrderLineItem Model
+
+rails generate model OrderProduct order_id:integer product_id:integer quantity:integer price:float
+rake db:migrate
+rails generate controller orders
+Path in config/routes.rd : resources:orders 
+
+rails generate model Review title:string body:text product_id:integer user_id:integer rating:integer
+rake db:migrate
+Add Validation in the model
+Add Controller : rails generate controller reviews
+
+
+To generate mailer
+rails generate mailer Notification order_confirmation
+
+Books to read:
+"Making Users Awesome"
+"Delivering Happiness"
+
+Data Visualisation(No Model, so a singular controller and no resources for this)
+rails generate controller dashboard index
+
+
+50 users
+2 to 7 orders for each user
+1 to 5 order products in each order
+
+gem 'chartkick'
+bundle install
+
+//= require Chart.bundle
+//= require chartkick
+
+
+
+
+<% line_chart_data = []%>
+<% category_chart_data = {}%>
+<% @categories.each do |category| 
+
+	begin_month = @orders.order('order_date ASC').first.order_date.beginning_of_month
+	end_month = Date.today
+	
+	category_chart_data = {}
+
+	while(begin_month<=end_month)
+		#category_chart_data[begin_month.strftime("%b %Y")] = @orders.where('order_date >= ? AND order_date<=? AND order.order_products.product.category = ?',begin_month,begin_month.end_of_month,category).count
+
+		category_chart_data[begin_month.strftime("%b %Y")] = OrderProduct.joins(:product, :order).where('products.category_id = ? AND orders.order_date >= ? AND orders.order_date <= ?', category.id, begin_month, begin_month.end_of_month).pluck(:id).size
+		begin_month = begin_month + 1.month
+	end
+	line_chart_data.push(
+	{"name" => category.name, 
+	"data" => category_chart_data})
+	%>
+	
+
+
+	
+	
+<%end %>
+
+
+	<%= line_chart line_chart_data %>
+
+
+<% data = {}
+	if params[:start_date] && params[:end_date]
+		begin_month = Date.parse(params[:start_date])
+		end_month = Date.parse(params[:end_date])
+	else
+		begin_month = @orders.order('order_date ASC').first.order_date.beginning_of_month
+		end_month = Date.today
+	end
+
+	while(begin_month<=end_month)
+		data[begin_month.strftime("%b %Y")] = @orders.where('order_date >= ? AND order_date<=?',begin_month,begin_month.end_of_month).count
+		begin_month = begin_month + 1.month
+	end
+%>
+
+Total Orders : <%= @orders.size %> <br/>
+<%= line_chart(data) %>
+
+
+
+Bug :
+
+1. Cannot confirm order on the cart

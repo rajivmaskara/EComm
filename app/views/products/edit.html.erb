@@ -1,0 +1,28 @@
+<h2> Edit Product </h2>
+
+<%= form_for @product do |f| %>
+
+	<%= f.label :category %><br/>
+	<%= f.collection_select :category_id, Category.all, :id, :name, prompt: "Select Catgeory" %><br/>
+
+	<%= f.label :name %> <br/>
+	<%= f.text_field :name %> <br/>
+
+	<%= f.label :description %> <br/>
+	<%= f.text_area :description, rows:5 %> <br/>
+
+	<%= f.label :base_price %> <br/>
+	<%= f.number_field :base_price %> <br/>
+
+	<%= f.label :selling_price %> <br/>
+	<%= f.number_field :price %> <br/>
+
+	<%= f.label :availability %> <br/>
+	<%= f.check_box :availability %> <br/>
+
+	<%= f.label :stock %> <br/>
+	<%= f.number_field :stock %> <br/>
+
+	<%= f.submit %> or <%= link_to "Go Back", :back %>
+
+<% end %>

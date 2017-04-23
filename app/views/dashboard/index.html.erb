@@ -1,0 +1,70 @@
+<h2>Dashboard</h2>
+
+<h3> Products </h3>
+
+Total Products : <%= @products.size %> <br/>
+
+<% data = {}
+	@categories.each do |category|
+		data[category.name] = category.products.size
+	end
+%>
+
+<%= pie_chart(data) %>
+
+<% scatter_data = []
+	@products.each do |product|
+		scatter_data.push([product.price - product.base_price, product.price])
+	end
+%>
+
+<%= scatter_chart(scatter_data, xtitle: "Margin", ytitle: "Price") %>
+
+
+
+
+<% line_chart_data = [
+	{
+		"name" => "Jewellery",
+		"data" => {
+			"Jan 2016" => 5,
+			"Feb 2016" => 10,
+			"Mar 2016" => 20,
+		}
+	},
+	{
+		"name" => "Automobile",
+		"data" => {
+			"Jan 2016" => 23,
+			"Feb 2016" => 12,
+			"Mar 2016" => 10,
+		}
+	}] %>
+	<%= line_chart line_chart_data %>
+
+<h3> Categories </h3>
+
+Total Categories : <%= @categories.size %> <br/>
+
+<%= column_chart(data) %>
+
+
+
+
+
+<h3> Orders </h3>
+
+<%= form_tag(dashboard_index_path, method: :get) do %>
+	<label> Start Date</label>
+	<%= date_field_tag :start_date %> <br/>
+	<label> End Date</label>
+	<%= date_field_tag :end_date %> <br/>
+
+	<%= submit_tag "Search" %>
+<% end %>
+
+
+<h3> Users </h3>
+
+Total USers : <%= @users.size %> <br/>
+

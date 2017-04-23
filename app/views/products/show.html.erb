@@ -1,0 +1,103 @@
+<H4> <%= @product.name %>  
+ <small>
+<%if user_signed_in? && current_user.is_admin %>
+ 
+ 	
+ 		<%= link_to"edit", edit_product_path(@product)%>
+ 		<%= link_to"destroy", product_path(@product), method: :delete, data: {confirm: "Are you sure"}%>
+
+	 
+ 	
+ 
+ <% end %>
+</small>
+ </H4> 
+
+<% if @product.product_image_url.nil? %>
+	<%= image_tag("/default.jpg", size: "150x150") %>
+
+<% else %>
+	<%= image_tag(@product.product_image_url, size: "150x150") %>
+<% end %>
+
+
+<h3>Category : <%= link_to @product.get_category_name, category_path(@product.category) %></h3>
+<p> INR <%= @product.price %> </p>
+<p> Stock : <%= @product.availability ? "is available : #{@product.stock} left" : "not available"%> </p>
+
+<% if @product.availability%>
+	<h4> Add to Cart </h4>
+
+	<%= form_for @cart_line_item do |f| %>
+		<label> Quantity : </label>
+		<%= f.select :quantity, (1..5).to_a %>
+		<%= f.hidden_field :product_id, value: @product.id %>
+		<br/><br/>
+		<%= f.submit "Add to Cart" %>
+	<%end%>
+<%else%>
+	<p> Product currently not available<p>
+<%end%>
+
+<h2> Add Review </h2>
+
+<%= form_for([@product,@review]) do |f|%>
+<label> Rating </label>
+<%= f.radio_button :rating, 1%> 1
+<%= f.radio_button :rating, 2%> 2
+<%= f.radio_button :rating, 3%> 3
+<%= f.radio_button :rating, 4%> 4
+<%= f.radio_button :rating, 5%> 5 <br/><br/>
+
+<label> Title </label>
+<%= f.text_field :title %> <br/>
+
+<label> Body </label>
+<%= f.text_area :body %> <br/>
+<%= f.hidden_field :product_id, value: @product.id %> <br/>
+<%= f.submit "Add Review" %>
+
+
+<% end %>
+
+<h2> Previous reviews </h2>
+<%if @reviews.empty? %>
+	<h2> No reviews for <%= @product.name %> yet </h2>	
+<%else%>
+	<% @reviews.each do |review| %>
+		<table>
+			<thead>
+				<td> Review Title</td>
+				<td> Review Rating</td>
+				<td> User</td>
+			</thead>
+			<tbody>
+				<td> <%= review.title %> </td>
+				<td> <%= review.rating %> </td>
+				<td> <%= review.user.username %> </td>
+			</tbody>>
+		</table>
+	<%end%>
+<%end%>
+
+
+<p>Related Products</p>
+
+<ul>
+		<% @related_products.each do |related_product| %>
+			<li> <%= link_to related_product.name, product_path(related_product)%> - (INR <%=related_product.price%>) - (<%= related_product.category.try(:name)%>)
+			<%#= product.get_category_name : This uses a method that we created in the Class%> 
+			<%#= product.category.name : This uses associations but if a foreign key is null it will throw an error for nil::NilClass, which can be handled using try%>
+			<!--  #here we can call the method like we have done in the show page. Show page is the preferred way to do it -->
+				
+
+			</li>
+
+
+
+		<%end%>
+
+	</ul>
+
+
+<%= link_to("Back",products_path)%>

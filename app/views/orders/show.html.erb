@@ -1,0 +1,20 @@
+<H2> Thank You for placing Order </H2>
+
+<p> Your Order Number : <%= @order.order_number %></p>
+<p> Your Order Date : <%= @order.order_date.strftime("%d %B %Y") %></p>
+<!--<p> Your Order Date : <%= @order.order_date %></p>-->
+ 	<H2> Your Orders</H2>
+ 	<% @order.order_products.each_with_index do |line_item,index| %>
+			<tr>
+				<td> <%= index + 1 %> </td>
+				<td> <%= link_to line_item.product.name, product_path(line_item.product)%> </td>
+				<td> <%= line_item.product.price %> </td>
+				<td> <%= line_item.product.price * line_item.quantity %></td>
+			</tr>
+	<%end %>
+
+	
+
+
+
+

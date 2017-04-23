@@ -1,0 +1,15 @@
+<H2> <%= @category.name %>  </H2> 
+
+<p> Total Products = <%= @category.products.size %></p>
+ 
+<H2> Listing Products</H2>
+<p>Sort : Price <%= link_to "low-high", category_path(@category, sort: "low-high")%> | <%= link_to "high-low", category_path(@category, sort: "high-low")%> </p>
+
+<ul>
+ <%@products.each do |product|%>
+ 	<li> <%= link_to product.name, product_path(product)%> <%= product.price%></li>
+ 	<% end %>
+
+</ul>
+
+<%= link_to("Back",categories_path)%>

@@ -1,0 +1,20 @@
+<p> Hello <%= @order.user.username %>, </p>
+
+<p> Your order has been confirmed. <br/>
+Here are your order details
+</p>
+
+
+<ol>
+	<% @order.order_products.each do |line_item| %>
+	<li>
+		<%= line_item.product.name %> - INR <%= line_item.price %> - <%= line_item.quantity %> units
+	</li>
+	<% end %>
+</ol>
+
+<strong> Total: <%= @order.total %> </strong> <br/>
+
+<p> Thank you for shopping with us </p>
+
+<%= image_tag("https://www.dctacademy.com/wp-content/uploads/2016/03/dct-final.jpg") %>

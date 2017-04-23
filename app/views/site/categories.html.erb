@@ -1,0 +1,13 @@
+<H2> Listing Categories(<%= @categories.count%>) </H2>
+	
+	<ul>
+		<% @categories.each do |category| %>
+			<li> <%= category.name%>(<%= Product.where('category_id = ?',category.id).count %>) </li>
+
+
+
+		<%end%>
+
+	</ul>
+		
+		

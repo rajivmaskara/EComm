@@ -1,0 +1,14 @@
+1) Rails generate controller products
+2) Goto routes.tb
+resources :products
+
+3) add index action and index.html.erb view files
+
+
+**************************************************
+Feature enhancements :
+
+After sign_in, the path needs to be where the user came from instead of going to the products page.
+Problem: When adding a review without signing in, he is taken to the login page and after that he goes to the product page
+
+**************************************************

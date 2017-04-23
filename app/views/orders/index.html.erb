@@ -1,0 +1,32 @@
+<h2> Your Orders </h2>
+
+	<% if @orders.empty? %>
+	<p> You do not have any orders </p>
+
+	<%else%>
+		<table border = "1">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Order_Number</th>
+					<th>Total</th>
+				</tr>
+		
+			</thead>
+			
+			<tbody>
+				<% @orders.each_with_index do |order,index| %>
+				<tr>
+					<td> <%= index + 1 %> </td>
+					<td> <%= link_to(order.order_number, order_path(order)) %></td>
+					<td> <%= order.total %> </td>
+				</tr>
+				<% end %>
+			</tbody>
+		</table>
+		<br/>
+		
+	<%end%>
+
+	<!--link_to("Show All Orders", )-->
+

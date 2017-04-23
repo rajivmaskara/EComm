@@ -1,0 +1,18 @@
+<H2> Listing Product( <%= @products.count%> ) </H2>
+
+<%=link_to("products",site_products_path)%> | <%= link_to("high-low", site_products_path(sort: "high-low"))%> | <%= link_to("low-high", site_products_path(sort: "low-high"))%>
+	
+	<ul>
+		<% @products.each do |product| %>
+			<li> <%= product.name%> - (INR <%=product.price%>) - (<%=Category.find(product.category_id).name %>)
+				
+
+			</li>
+
+
+
+		<%end%>
+
+	</ul>
+		
+	<iframe src='http://localhost:4848/single/?appid=C%3A%5CUsers%5Cram%5CDocuments%5CQlik%5CSense%5CApps%5CRubyApp.qvf&obj=pdcJ&opt=nointeraction&select=clearall' style='border:none;'></iframe>

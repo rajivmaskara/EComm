@@ -1,0 +1,43 @@
+<h2> Add Product </h2>
+
+<%= form_for @product do |f| %>
+
+	<%if @product.errors.any? %>
+		<h3>These errors prohibited the form from being saved</h3>
+		<ul>
+			<% @product.errors.full_messages.each do |msg| %>
+				<li><%= msg %></li>
+			<%end%>
+
+		</ul>
+	<%end%>
+
+
+	<%= f.label :category %><br/>
+	<%= f.collection_select :category_id, Category.all, :id, :name, prompt: "Select Catgeory" %><br/>
+	<%= @product.errors.messages[:category_id].join(", ")%>
+
+	<%= f.label :name %> <br/><%= @product.errors.messages[:category_id].join(", ")%>
+	<%= f.text_field :name %> <br/>
+
+	<%= f.label :description %> <br/>
+	<%= f.text_area :description, rows:5 %> <br/>
+
+	<%= f.label :base_price %> <br/>
+	<%= f.number_field :base_price %> <br/>
+
+	<%= f.label :selling_price %> <%= @product.errors.messages[:category_id].join(", ")%><br/>
+	<%= f.number_field :price %> <br/>
+
+	<%= f.label :availability %> <br/>
+	<%= f.check_box :availability %> <br/>
+
+	<%= f.label :stock %> <br/>
+	<%= f.number_field :stock %> <br/>
+
+	<%= f.label :product_image %><br/>
+	<%= f.file_field :product_image %> <br/>
+
+	<%= f.submit %>
+
+<% end %>

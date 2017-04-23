@@ -1,0 +1,25 @@
+<H2> Listing Categories( <%= @categories.count%> ) </H2>
+
+<% if @categories.empty? %>
+ <p> Categories not added yet</p>
+
+<% else %>
+
+
+<ul>
+		<% @categories.each do |category| %>
+			<li> <%= link_to category.name, category_path(category)%> 
+			<%#= product.get_category_name : This uses a method that we created in the Class%> 
+			<%#= product.category.name : This uses associations but if a foreign key is null it will throw an error for nil::NilClass, which can be handled using try%>
+			<!--  #here we can call the method like we have done in the show page. Show page is the preferred way to do it -->
+				
+
+			</li>
+
+
+
+		<%end%>
+
+	</ul>
+
+<% end %>
